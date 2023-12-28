@@ -1,11 +1,10 @@
 import { MDBDataTableV5 } from "mdbreact";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { axiosInstance } from "../../Axios/axioConfig";
+import { axiosInstance, useAxiosLoader } from "../../Axios/axioConfig";
 import { toast } from "react-toastify";
 
-
-interface User  {
+interface User {
   image: string;
   fullName: string;
   role: string;
@@ -17,7 +16,6 @@ interface User  {
 }
 
 const Users = () => {
-
   const [datatable, setDatatable] = useState({
     columns: [
       {
@@ -58,6 +56,8 @@ const Users = () => {
     ],
     rows: [],
   });
+
+  const [ isloading ] = useAxiosLoader();
 
   useEffect(() => {
     axiosInstance
@@ -106,7 +106,11 @@ const Users = () => {
         </div>
         <div className="card-body">
           <div className="table-responsive">
-            <MDBDataTableV5
+            {isloading ? (
+              <div className="spinner-border text-primary" role="status">
+              </div>
+            ) : (
+              <MDBDataTableV5
               hover
               entriesOptions={[5, 20, 25]}
               entries={5}
@@ -115,6 +119,7 @@ const Users = () => {
               searchTop
               searchBottom={false}
             />
+            )}
           </div>
         </div>
       </div>

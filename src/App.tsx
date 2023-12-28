@@ -27,11 +27,11 @@ const AddUser = lazy(() => import("./Components/Users/AddUser"));
 function App() {
   const [token, setToken] = React.useState<string | null>(null);
   useEffect(() => {
-    return setToken(localStorage.getItem("token"));
+    setToken(localStorage.getItem("token"));
   }, []);
 
   const PrivateRoute = ({ children }: { children: ReactNode }) => {
-    return token ? children : <Navigate to="/" />;
+    return token ? children : <Navigate to="/dashboard" />;
   };
 
   return (
