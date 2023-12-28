@@ -32,11 +32,11 @@ function App() {
           <Route path="/forget-password" element={<ForgetPassword />}></Route>
           <Route path="/dashboard" element={token ? <Dashboard /> : <Login />}>
             <Route index element={<Dashboard_Details />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/add-user" element={<AddUser />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/brands" element={<Brands />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="users" element={<Users />} />
+            <Route path="add-user" element={<AddUser />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="brands" element={<Brands />} />
+            <Route path="products" element={<Products />} />
           </Route>
           <Route path="*" element={<Login />}></Route>
         </Routes>

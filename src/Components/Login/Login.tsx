@@ -1,24 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosInstance, useAxiosLoader } from "../../Axios/axioConfig";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isloading] = useAxiosLoader();
-
-  useEffect(() => {
-    ifTokenAlreadyHas();
-  }, []);
-
-  const ifTokenAlreadyHas = () => {
-    if (sessionStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -42,7 +32,7 @@ const Login = () => {
             sessionStorage.setItem("token", authToken);
             sessionStorage.setItem("UserName", UserName);
             sessionStorage.setItem("image", image);
-            window.location.href = "/dashboard";
+            navigate("/dashboard");
           }
         })
         .catch((err) => {
