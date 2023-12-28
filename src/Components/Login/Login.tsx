@@ -1,29 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { axiosInstance, useAxiosLoader } from "../../Axios/axioConfig";
-
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isloading] = useAxiosLoader();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isloading] = useAxiosLoader();
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        if(email === '' || password === ''){
-            toast.info('Please fill all the fields');
-        }else{
-            const data = { email, password }
-            axiosInstance.post('/api/v1/users/login', data)
-            .then((res) => {
-                toast.success(res.data.message);
-            })
-            .catch((err) => {
-                toast.error(err.response.data.message);
-            })
-        }
+  useEffect(() => {
+    ifTokenAlreadyHas();
+  }, []);
+
+  const ifTokenAlreadyHas = () => {
+    if (sessionStorage.getItem("token")) {
+      navigate("/dashboard");
     }
+  };
+
+  const handleSubmit = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (email === "" || password === "") {
+      toast.info("Please fill all the fields");
+    } else {
+      const data = { email, password };
+      axiosInstance
+        .post("/api/v1/users/login", data)
+        .then((res) => {
+          const authToken = res.data.message.token;
+          const UserName = res.data.message.selectedUser.fullName;
+          const Role = res.data.message.selectedUser.role;
+          const image = res.data.message.selectedUser.imageUrl;
+
+          if (authToken) {
+            if (Role !== "admin") {
+              toast.error("You are not authorized to access this page");
+              return;
+            }
+            sessionStorage.setItem("token", authToken);
+            sessionStorage.setItem("UserName", UserName);
+            sessionStorage.setItem("image", image);
+            window.location.href = "/dashboard";
+          }
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
+        });
+    }
+  };
 
   return (
     <div>
@@ -47,7 +73,7 @@ const Login = () => {
                             id="exampleInputEmail"
                             aria-describedby="emailHelp"
                             placeholder="Enter Email Address..."
-                            onChange={(e)=> setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                           />
                         </div>
                         <div className="form-group">
@@ -56,7 +82,7 @@ const Login = () => {
                             className="form-control form-control-user"
                             id="exampleInputPassword"
                             placeholder="Password"
-                            onChange={(e)=> setPassword(e.target.value)}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
                         <div className="form-group">
@@ -75,14 +101,14 @@ const Login = () => {
                           </div>
                         </div>
                         <button
-                            onClick={(e)=> handleSubmit(e)}
+                          onClick={(e) => handleSubmit(e)}
                           className={
                             isloading
                               ? "btn btn-primary btn-user btn-block disabled"
                               : "btn btn-primary btn-user btn-block"
                           }
                         >
-                        {isloading ? 'Loading...' : 'Login'}
+                          {isloading ? "Loading..." : "Login"}
                         </button>
                         <hr />
                         <a
@@ -116,6 +142,4 @@ const Login = () => {
   );
 };
 
-
 export default Login;
-
