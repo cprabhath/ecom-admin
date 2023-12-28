@@ -1,4 +1,4 @@
-import { useDropzone } from "react-dropzone";
+import { FileRejection, useDropzone } from "react-dropzone";
 import { useCallback, useMemo, useState, useEffect } from "react";
 import { axiosInstance, useAxiosLoader } from "../../Axios/axioConfig";
 import { storage } from "../Config/firebase";
@@ -12,8 +12,8 @@ import { useNavigate } from "react-router-dom";
 
 const baseStyle = {
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
+  justifyContent: "center",
   padding: "40px",
   borderWidth: 2,
   borderRadius: 2,
@@ -37,10 +37,12 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
+type FileWithPreview = File & { preview: string };
+
 const AddUser = () => {
-  const [image, setImage] = useState<File | null | undefined>(null);
+  const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [role, setRole] = useState("");
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
@@ -52,13 +54,11 @@ const AddUser = () => {
   const navigate = useNavigate();
 
   // Dropzone Callback
-  const onDrop = useCallback((acceptedFiles: []) => {
-    const file = acceptedFiles;
-    if (file.length > 0) {
-      if (file.length > 0) {
+  const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {
+    const file: File[] = acceptedFiles;
+      if (acceptedFiles.length > 0) {
         setImage(file[0]);
       }
-    }
     setFiles(
       acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -66,7 +66,11 @@ const AddUser = () => {
         })
       )
     );
-  }, []);
+
+    fileRejections.map((file) => {
+      toast.error(`${file.file.name} is not a valid image file`);
+    });
+  }, [setImage, setFiles]);
 
   // Dropzone
   const {
@@ -280,7 +284,7 @@ const AddUser = () => {
                   Add User Image
                 </label>
                 <div data-mdb-input-init className="form-outline mb-4">
-                  <div {...getRootProps({ style })}>
+                  <div {...getRootProps({ style })} className="d-flex flex-column">
                     <input {...getInputProps()} />
                     {files.map((file) => (
                       <div key={file.name}>
