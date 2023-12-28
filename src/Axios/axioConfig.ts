@@ -5,7 +5,9 @@ const axiosInstance = axios.create({
   baseURL: "https://ecom-backend-sys6.onrender.com",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
 
@@ -17,7 +19,7 @@ const useAxiosLoader = () => {
 
     const requestInterceptor = axiosInstance.interceptors.request.use(
       (config) => {
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if (token) {
           config.headers["Authorization"] = `Bearer ${token}`;
         }
