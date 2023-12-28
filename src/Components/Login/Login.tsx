@@ -29,9 +29,10 @@ const Login = () => {
               toast.error("You are not authorized to access this page");
               return;
             }
-            sessionStorage.setItem("token", authToken);
-            sessionStorage.setItem("UserName", UserName);
-            sessionStorage.setItem("image", image);
+            localStorage.setItem("token", authToken);
+            localStorage.setItem("UserName", UserName);
+            localStorage.setItem("image", image);
+
             navigate('/dashboard');
           }
         })

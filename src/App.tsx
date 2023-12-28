@@ -1,7 +1,12 @@
 import "./App.css";
-import { Route, Routes, HashRouter as Router, Navigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  HashRouter as Router,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { ReactNode, Suspense, lazy } from "react";
+import React, { ReactNode, Suspense, lazy, useEffect } from "react";
 import Loader from "./Components/Loader/Loader";
 
 const Login = lazy(() => import("./Components/Login/Login"));
@@ -19,14 +24,16 @@ const Brands = lazy(() => import("./Components/Brands/Brands"));
 const Products = lazy(() => import("./Components/Products/Products"));
 const AddUser = lazy(() => import("./Components/Users/AddUser"));
 
-
 function App() {
-  const token = sessionStorage.getItem("token");
+  const [token, setToken] = React.useState<string | null>(null);
+  useEffect(() => {
+    return setToken(localStorage.getItem("token"));
+  }, []);
 
-  const PrivateRoute = ({ children } : { children: ReactNode } ) => {
+  const PrivateRoute = ({ children }: { children: ReactNode }) => {
     return token ? children : <Navigate to="/" />;
   };
-  
+
   return (
     <Suspense fallback={<Loader />}>
       <Router>
@@ -35,7 +42,14 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/forget-password" element={<ForgetPassword />}></Route>
-          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>}>
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          >
             <Route index element={<Dashboard_Details />} />
             <Route path="users" element={<Users />} />
             <Route path="add-user" element={<AddUser />} />

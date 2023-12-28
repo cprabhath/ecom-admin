@@ -7,8 +7,8 @@ const Dashboard = () => {
   useEffect(() => {
     getProdcuts();
     getUsers();
-    setUserName(sessionStorage.getItem("UserName")!);
-    setImage(sessionStorage.getItem("image")!);
+    setUserName(localStorage.getItem("UserName")!);
+    setImage(localStorage.getItem("image")!);
   }, []);
 
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const Dashboard = () => {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        sessionStorage.clear();
+        localStorage.clear();
         navigate("/");
       }
     });
