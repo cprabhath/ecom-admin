@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { FetchUserList, Removeuser } from "../../Redux/Action";
-import { ThunkDispatch } from "redux-thunk";
-import { Action } from "redux";
 
 interface user {
   errmessage: string;
