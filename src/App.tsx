@@ -30,13 +30,13 @@ function App() {
           <Route path="/register" element={<Register />}></Route>
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/forget-password" element={<ForgetPassword />}></Route>
-          <Route path="/dashboard/" element={token ? <Dashboard /> : <Login />}>
+          <Route path="/dashboard" element={token ? <Dashboard /> : <Login />}>
             <Route index element={<Dashboard_Details />} />
-            <Route path="users" element={<Users />} />
-            <Route path="add-user" element={<AddUser />} />
-            <Route path="categories" element={<Categories />} />
-            <Route path="brands" element={<Brands />} />
-            <Route path="products" element={<Products />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/add-user" element={<AddUser />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/brands" element={<Brands />} />
+            <Route path="/products" element={<Products />} />
           </Route>
           <Route path="*" element={<Login />}></Route>
         </Routes>
