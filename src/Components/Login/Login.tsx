@@ -32,7 +32,7 @@ const Login = () => {
             sessionStorage.setItem("token", authToken);
             sessionStorage.setItem("UserName", UserName);
             sessionStorage.setItem("image", image);
-            navigate("/dashboard");
+            navigate('/dashboard');
           }
         })
         .catch((err) => {

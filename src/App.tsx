@@ -1,7 +1,7 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, HashRouter as Router, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { Suspense, lazy } from "react";
+import { ReactNode, Suspense, lazy } from "react";
 import Loader from "./Components/Loader/Loader";
 
 const Login = lazy(() => import("./Components/Login/Login"));
@@ -22,15 +22,20 @@ const AddUser = lazy(() => import("./Components/Users/AddUser"));
 
 function App() {
   const token = sessionStorage.getItem("token");
+
+  const PrivateRoute = ({ children } : { children: ReactNode } ) => {
+    return token ? children : <Navigate to="/" />;
+  };
+  
   return (
     <Suspense fallback={<Loader />}>
-      <BrowserRouter>
+      <Router>
         <Routes>
           <Route path="/" element={<Login />}></Route>
           <Route path="/register" element={<Register />}></Route>
           <Route path="/Login" element={<Login />}></Route>
           <Route path="/forget-password" element={<ForgetPassword />}></Route>
-          <Route path="/dashboard" element={token ? <Dashboard /> : <Login />}>
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>}>
             <Route index element={<Dashboard_Details />} />
             <Route path="users" element={<Users />} />
             <Route path="add-user" element={<AddUser />} />
@@ -40,7 +45,7 @@ function App() {
           </Route>
           <Route path="*" element={<Login />}></Route>
         </Routes>
-      </BrowserRouter>
+      </Router>
       <ToastContainer className="toast-position" position="top-right" />
     </Suspense>
   );
