@@ -38,7 +38,7 @@ const rejectStyle = {
 };
 
 const AddUser = () => {
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | null | undefined>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [files, setFiles] = useState([]);
   const [role, setRole] = useState("");
@@ -53,8 +53,12 @@ const AddUser = () => {
 
   // Dropzone Callback
   const onDrop = useCallback((acceptedFiles: []) => {
-    const file = acceptedFiles[0];
-    setImage(file);
+    const file = acceptedFiles;
+    if (file.length > 0) {
+      if (file.length > 0) {
+        setImage(file[0]);
+      }
+    }
     setFiles(
       acceptedFiles.map((file) =>
         Object.assign(file, {
@@ -289,7 +293,7 @@ const AddUser = () => {
                     <div
                       className="progress-bar progress-bar-striped progress-bar-animated"
                       role="progressbar"
-                      aria-valuemin="0"
+                      aria-valuemin={0}
                       aria-valuemax={100}
                       style={{ width: `${uploadProgress}%` }}
                     ></div>

@@ -4,6 +4,18 @@ import { Link } from "react-router-dom";
 import { axiosInstance } from "../../Axios/axioConfig";
 import { toast } from "react-toastify";
 
+
+interface User  {
+  image: string;
+  fullName: string;
+  role: string;
+  email: string;
+  imageUrl: string;
+  emailVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const Users = () => {
 
   const [datatable, setDatatable] = useState({
@@ -44,6 +56,7 @@ const Users = () => {
         sort: "disabled",
       },
     ],
+    rows: [],
   });
 
   useEffect(() => {
@@ -51,7 +64,7 @@ const Users = () => {
       .get("/api/v1/users/find-all")
       .then((res) => {
         const data = res.data.message;
-        const rows = data.map((user: any) => {
+        const rows = data.map((user: User) => {
           return {
             image: (
               <img
